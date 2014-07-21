@@ -82,6 +82,9 @@ func (ch *Chapter) Parse(done chan bool) {
 	doc, err := goquery.NewDocument(ch.Url)
 	if err != nil {
 		// Try again
+		if(strings.Contains(err.Error(), "too many open files")) {
+			panic("Not enough file descriptors. Try increasing your ulimit: ulimit -n 9999")
+		}
 		ch.Retries++
 		go ch.Parse(done)
 		return
